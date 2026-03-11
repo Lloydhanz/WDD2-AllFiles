@@ -1,0 +1,94 @@
+.login-form {
+  display: flex;
+  flex-direction: column;
+}
+
+.alert-error {
+  background-color: #fee;
+  border: 1px solid var(--error-red);
+  color: var(--error-red);
+  padding: 0.75rem;
+  border-radius: 6px;
+  margin-bottom: 1rem;
+  font-size: 0.875rem;
+}
+
+/* Page-level container: center the auth panel within the page flow */
+.auth-page {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  box-sizing: border-box;
+}
+
+.auth-panel {
+  width: 100%;
+  max-width: 380px;
+  margin: 0 auto;
+}
+
+.auth-tabs {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 16px;
+  justify-content: center;
+}
+
+.tab {
+  flex: none;
+  min-width: 120px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.95);
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  color: var(--text-dark);
+  cursor: pointer;
+  transition:
+    transform 0.15s ease,
+    box-shadow 0.15s ease,
+    background 0.15s ease,
+    color 0.15s ease;
+}
+
+.tab.active {
+  background: var(--background-white);
+  color: var(--text-dark);
+  border-color: rgba(0, 0, 0, 0.08);
+  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.06);
+}
+
+.auth-form .form-field input {
+  width: 100%;
+}
+
+.auth-card-wrapper .auth-tabs {
+  margin-bottom: 18px;
+}
+
+.form-title {
+  text-align: center;
+  font-weight: 700;
+  color: var(--text-dark);
+  margin-bottom: 8px;
+}
+
+.tab:hover,
+.tab:focus {
+  background: var(--background-white);
+  color: var(--primary-blue);
+  outline: none;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+  transform: translateY(-2px);
+}
+
+/* Inline notification for inventory save success on the Inventory page */
+.inventory-notif {
+  background-color: #e6ffea;
+  border: 1px solid #2ecc71;
+  color: #1f8a3a;
+  padding: 8px 12px;
+  border-radius: 6px;
+  margin: 8px 0 12px;
+}

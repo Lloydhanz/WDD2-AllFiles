@@ -1,0 +1,30 @@
+:root {
+  --primary: var(--primary-blue);
+  --accent: var(--secondary-green);
+  --bg: var(--background-white);
+  --text: var(--text-dark);
+}
+
+.auth-form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.form-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.form-field label {
+  font-size: 0.9rem;
+  color: var(--text);
+}
+.form-field input {
+  padding: 10px 12px;
+  border: 1px solid var(--border-gray);
+  border-radius: 8px;
+}
+.auth-error {
+  color: var(--error-red);
+  margin-bottom: 8px;
+}
