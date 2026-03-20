@@ -2,10 +2,12 @@ import React from "react";
 import "./Header.css";
 import Button from "./button";
 import { useAuth } from "../contexts/AuthContext";
+import { useCart } from "../contexts/CartContext";
 import { Link, useNavigate } from "react-router-dom";
 
 export default function Header() {
   const { user, logout } = useAuth();
+  const { cartCount } = useCart();
   const navigate = useNavigate();
 
   const handleLogout = async () => {
@@ -27,10 +29,25 @@ export default function Header() {
           <Link to="/">Home</Link>
           <Link to="/about">About Us</Link>
           <Link to="/shop">Shop</Link>
+
           {user && user.role === "Admin" && (
             <Link to="/admin">Admin Dashboard</Link>
           )}
+
           {user && <Link to="/profile">Profile</Link>}
+
+          {/* New History Link for standard users */}
+          {user && user.role !== "Admin" && <Link to="/history">History</Link>}
+
+          {/* Cart Link with count */}
+          {user && user.role !== "Admin" && (
+            <Link
+              to="/cart"
+              style={{ fontWeight: "bold", color: "var(--secondary-green)" }}
+            >
+              Cart ({cartCount})
+            </Link>
+          )}
         </nav>
         <div className="auth-section">
           {user ? (

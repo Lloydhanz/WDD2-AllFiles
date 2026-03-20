@@ -26,9 +26,28 @@ export default function Cart() {
 
   const handleCheckout = () => {
     if (cart.length === 0) return;
-    alert("Checkout successful! Your order has been placed.");
+
+    // 1. Create the Order Object
+    const newOrder = {
+      id: `ORD-${Date.now()}`,
+      date: new Date().toLocaleString(),
+      items: cart,
+      total: cartTotal,
+      status: "Paid",
+    };
+
+    // 2. Save it to local storage history specific to the user
+    const historyKey = `orderHistory_${user.username}`;
+    const existingHistory = JSON.parse(localStorage.getItem(historyKey)) || [];
+    localStorage.setItem(
+      historyKey,
+      JSON.stringify([newOrder, ...existingHistory]),
+    );
+
+    // 3. Clear cart and redirect
+    alert("Checkout successful! Your payment has been processed.");
     clearCart();
-    navigate("/shop");
+    navigate("/history");
   };
 
   return (
@@ -53,8 +72,10 @@ export default function Cart() {
                 <div key={item._id} className="cart-item">
                   <div
                     className="item-image"
-                    style={{ backgroundImage: `url(${item.imageUrl})` }}
-                  ></div>
+                    style={{
+                      backgroundImage: `url(${item.imageUrl || "https://via.placeholder.com/300?text=No+Image"})`,
+                    }}
+                  />
                   <div className="item-details">
                     <h3>{item.name}</h3>
                     <p className="item-price">${item.price.toFixed(2)}</p>

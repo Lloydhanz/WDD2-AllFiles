@@ -4,13 +4,16 @@ import Footer from "../components/Footer";
 import Button from "../components/button";
 import { getAllProducts } from "../services/productService";
 import { useAuth } from "../contexts/AuthContext";
+import { useCart } from "../contexts/CartContext";
 import "./Shop.css";
 
 export default function Shop() {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
-  const { user } = useAuth(); // NEW: Get user to check if logged in
+
+  const { user } = useAuth();
+  const { addToCart } = useCart();
 
   useEffect(() => {
     fetchProducts();
@@ -28,14 +31,16 @@ export default function Shop() {
   };
 
   const handleAddToCart = (product) => {
-    // NEW: Check if user is logged in before allowing add to cart
     if (!user) {
       alert("You must be logged in to order items.");
       return;
     }
-
-    // Placeholder for actual cart logic which we will build next
-    alert(`Added ${product.name} to cart!`);
+    if (user.role === "Admin") {
+      alert("Admins cannot place orders.");
+      return;
+    }
+    addToCart(product);
+    alert(`${product.name} has been added to your cart!`);
   };
 
   return (
@@ -57,7 +62,6 @@ export default function Shop() {
         <div className="product-grid">
           {products.map((product) => (
             <div key={product._id} className="product-card">
-              {/* NEW: Render the image! */}
               <div
                 style={{
                   height: "200px",
@@ -72,12 +76,16 @@ export default function Shop() {
                 <h3>{product.name}</h3>
                 <p className="product-desc">{product.description}</p>
                 <p className="product-price">${product.price.toFixed(2)}</p>
-                <Button
-                  variant="primary"
-                  onClick={() => handleAddToCart(product)}
-                >
-                  Add to Cart
-                </Button>
+
+                {/* Hide button if Admin */}
+                {(!user || user.role !== "Admin") && (
+                  <Button
+                    variant="primary"
+                    onClick={() => handleAddToCart(product)}
+                  >
+                    Add to Cart
+                  </Button>
+                )}
               </div>
             </div>
           ))}

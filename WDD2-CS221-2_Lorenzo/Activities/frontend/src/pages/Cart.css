@@ -86,6 +86,7 @@
 .quantity-controls {
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: 0.5rem;
   background: #f3f4f6;
   padding: 0.25rem;
@@ -100,6 +101,14 @@
   border-radius: 4px;
   cursor: pointer;
   font-weight: bold;
+  color: var(--primary-blue);
+  border: 1.5px solid var(--primary-blue);
+  transition: background 0.2s, color 0.2s;
+}
+
+.quantity-controls button:hover {
+  background: var(--primary-blue);
+  color: #fff;
 }
 
 .remove-btn {
