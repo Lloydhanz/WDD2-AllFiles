@@ -10,10 +10,10 @@ export default function Landing() {
     <div className="landing-page">
       <Header />
       <Hero
-        title="Inventory Manager"
-        description="Your one-stop solution for inventory management."
-        ButtonText="Get Started"
-        ButtonLink="/auth" // direct users to the authentication flow (login/register)
+        title="Welcome to Retail Hub"
+        description="Your ultimate destination for the best products at unbeatable prices."
+        ButtonText="Shop Now"
+        ButtonLink="/shop"
       />
       <MainContent />
       <Footer />

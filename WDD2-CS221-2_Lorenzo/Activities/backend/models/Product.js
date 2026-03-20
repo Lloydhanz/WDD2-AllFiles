@@ -10,7 +10,7 @@ const productSchema = new mongoose.Schema(
       type: String,
       unique: true,
       lowercase: true,
-    }, // e.g., “lucky-me-pancit-canton”
+    },
     description: {
       type: String,
     },
@@ -18,6 +18,10 @@ const productSchema = new mongoose.Schema(
       type: Number,
       required: true,
       min: 0,
+    },
+    imageUrl: {
+      type: String,
+      default: "https://via.placeholder.com/300?text=No+Image",
     },
   },
   { timestamps: true },

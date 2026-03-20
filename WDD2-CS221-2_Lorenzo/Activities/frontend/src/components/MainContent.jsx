@@ -5,29 +5,28 @@ export default function MainContent() {
   const features = [
     {
       id: 1,
-      title: "Real-time Tracking",
-      description:
-        "Monitor your inventory levels in real-time and receive instant updates.",
+      title: "Wide Selection",
+      description: "Browse thousands of products across multiple categories.",
     },
     {
       id: 2,
-      title: "Automated Alerts",
+      title: "Fast Shipping",
       description:
-        "Get notified when stock levels are low or when it's time to reorder.",
+        "Get your items delivered quickly and securely to your doorstep.",
     },
     {
       id: 3,
-      title: "Detailed Reporting",
+      title: "Secure Checkout",
       description:
-        "Generate comprehensive reports to analyze inventory trends and make informed decisions.",
+        "Shop with confidence using our encrypted and secure payment systems.",
     },
   ];
   return (
     <div>
       <main className="content-wrapper">
         <section className="intro-section">
-          <h2>Welcome to Inventory Manager</h2>
-          <p>Your one-stop solution for inventory management.</p>
+          <h2>Discover Our Collections</h2>
+          <p>Everything you need, right at your fingertips.</p>
         </section>
         <div className="features-grid">
           {features.map((feature) => (

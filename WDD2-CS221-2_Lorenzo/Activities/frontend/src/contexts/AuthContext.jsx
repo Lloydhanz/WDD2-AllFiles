@@ -1,6 +1,8 @@
 import { createContext, useContext, useState, useEffect } from "react";
 import { authService } from "../services/authService";
+
 const AuthContext = createContext(null);
+
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -15,16 +17,25 @@ export const AuthProvider = ({ children }) => {
 
   const login = async (credentials) => {
     const data = await authService.login(credentials);
-    // backend may return { _id, username, token } or { user, token }
+
+    // FIX: Capture the role from the backend
     const userObj = data.user
       ? data.user
       : data.username || data._id
-        ? { id: data._id || null, username: data.username || null }
+        ? {
+            id: data._id || null,
+            username: data.username || null,
+            role: data.role || "User",
+          }
         : null;
+
     if (data?.token) localStorage.setItem("token", data.token);
     if (userObj) localStorage.setItem("user", JSON.stringify(userObj));
+
     setUser(userObj);
-    return data;
+
+    // FIX: Return the user object so the login form can read it
+    return userObj;
   };
 
   const register = async (userData) => {
@@ -36,6 +47,7 @@ export const AuthProvider = ({ children }) => {
     await authService.logout();
     setUser(null);
   };
+
   const value = {
     user,
     loading,
@@ -45,12 +57,11 @@ export const AuthProvider = ({ children }) => {
     isAuthenticated: !!user,
   };
 
-  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
+  return (
+    <AuthContext.Provider value={value}>
+      {!loading && children}
+    </AuthContext.Provider>
+  );
 };
-export const useAuth = () => {
-  const context = useContext(AuthContext);
-  if (!context) {
-    throw new Error("useAuth must be used within an AuthProvider");
-  }
-  return context;
-};
+
+export const useAuth = () => useContext(AuthContext);

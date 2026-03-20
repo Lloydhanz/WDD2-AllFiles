@@ -5,12 +5,16 @@ import "../components/auth/RegisterComponent.css";
 import LoginComponent from "../components/auth/LoginComponent";
 import RegisterComponent from "../components/auth/RegisterComponent";
 import Card from "../components/Card";
+import AuthHeader from "../components/AuthHeader";
 
 const AuthPage = () => {
   const [active, setActive] = useState("login");
 
   return (
     <div className="auth-page">
+      {/* This renders your new top nav bar */}
+      <AuthHeader />
+
       <div className="auth-panel">
         <Card title={active === "login" ? "SIGN IN" : "SIGN UP"}>
           <div className="auth-card-wrapper">

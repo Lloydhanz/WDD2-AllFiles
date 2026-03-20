@@ -14,7 +14,7 @@ const Inventory = () => {
     name: "",
     description: "",
     price: 0,
-    slug: "",
+    imageUrl: "", // NEW: Added to state
   });
   const [errors, setErrors] = useState({});
   const [notif, setNotif] = useState("");
@@ -32,28 +32,23 @@ const Inventory = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setErrors({});
-    // Basic client-side validation
     if (!formData.name) {
-      setErrors({ error: "Name is required" });
+      setErrors({ name: "Name is required" });
       return;
     }
     setLoading(true);
     try {
       await createProduct({
         name: formData.name,
-        description: formData.description,
-        price: Number(formData.price) || 0,
         slug: slug,
+        description: formData.description,
+        price: Number(formData.price),
+        imageUrl: formData.imageUrl, // NEW: send image to backend
       });
-      // Reset form after successful save
-      setFormData({ name: "", description: "", price: 0, slug: "" });
-      setSlug("");
-      // Notify user about success
-      setNotif("Product saved");
-      // Clear notification after a moment
-      setTimeout(() => setNotif(""), 3000);
+      setNotif("Product successfully added!");
+      setFormData({ name: "", description: "", price: 0, imageUrl: "" });
     } catch (err) {
-      setErrors({ error: err?.message || "Failed to save product" });
+      setErrors({ form: err.message || "Failed to create product" });
     } finally {
       setLoading(false);
     }
@@ -65,18 +60,25 @@ const Inventory = () => {
       strict: true,
     });
     setSlug(generatedSlug);
-  }, [formData]);
+  }, [formData.name]);
 
   useEffect(() => {
     if (!user) {
-      alert("You must be logged in to access the inventory page.");
+      alert("You must be logged in to access this page.");
       navigate("/login");
     }
-  }, []);
+  }, [user, navigate]);
 
-   return (
+  return (
     <Card title="Create Product">
-      {notif && <div className="inventory-notif">{notif}</div>}
+      {notif && (
+        <div
+          style={{ color: "green", marginBottom: "1rem", textAlign: "center" }}
+        >
+          {notif}
+        </div>
+      )}
+      {errors.form && <div className="alert-error">{errors.form}</div>}
       <form onSubmit={handleSubmit} className="login-form">
         <Input
           label="Name"
@@ -88,25 +90,22 @@ const Inventory = () => {
           placeholder="Enter product name"
           required
         />
+        <Input label="Slug" type="text" name="slug" value={slug} disabled />
         <Input
-          label="Slug"
-          type="text"
-          name="slug"
-          value={slug}
+          label="Image URL (Link)"
+          type="url"
+          name="imageUrl"
+          value={formData.imageUrl}
           onChange={handleChange}
-          error={errors.slug}
-          disabled
+          placeholder="https://example.com/image.png"
         />
-
         <TextArea
           label="Description"
           name="description"
-          error={errors.description}
-          rows={10}
-          cols={40}
+          rows={5}
           value={formData.description}
+          onChange={handleChange}
         ></TextArea>
-
         <Input
           label="Price"
           type="number"
@@ -114,13 +113,16 @@ const Inventory = () => {
           value={formData.price}
           onChange={handleChange}
           error={errors.price}
+          min="0"
+          step="0.01"
+          required
         />
-
-        <Button type="submit" loading={loading}>
-          Save Product
+        <Button type="submit" loading={loading} style={{ marginTop: "1rem" }}>
+          Add Product
         </Button>
       </form>
     </Card>
   );
 };
+
 export default Inventory;

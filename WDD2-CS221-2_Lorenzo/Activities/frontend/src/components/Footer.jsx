@@ -7,18 +7,20 @@ export default function Footer() {
       <footer className="footer-container">
         <div className="footer-content">
           <div className="footer-brand">
-            <h3>Inventory Manager</h3>
-            <p>your one-stop solution for inventory management.</p>
+            <h3>Retail Hub</h3>
+            <p>Your ultimate destination for everyday shopping.</p>
           </div>
           <div className="footer-links">
             <div className="link-group">
               <a href="/">Home</a>
-              <a href="/login">Login</a>
-              <a href="/inventory">Inventory</a>
+              <a href="/shop">Shop</a>
+              <a href="/about">About</a>
             </div>
           </div>
           <div className="footer-bottom">
-            <p>&copy; 2024 Inventory Manager. All rights reserved.</p>
+            <p>
+              &copy; {new Date().getFullYear()} Retail Hub. All rights reserved.
+            </p>
           </div>
         </div>
       </footer>

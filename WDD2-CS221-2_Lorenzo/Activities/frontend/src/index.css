@@ -3,16 +3,16 @@
   line-height: 1.5;
   font-weight: 400;
 
-  /* Theme Colors */
-  --primary-blue: #1e90ff;
-  --secondary-green: #10b981;
+  /* Theme Colors: Midnight Ocean */
+  --primary-blue: #0f172a; /* Very Dark Navy */
+  --secondary-green: #0ea5e9; /* Bright Ocean Teal */
   --background-white: #ffffff;
-  --text-dark: #1f2937;
-  --text-light: #6b7280;
-  --border-gray: #d1d5db;
+  --text-dark: #1e293b;
+  --text-light: #64748b;
+  --border-gray: #e2e8f0;
   --error-red: #ef4444;
-  --hover-blue: #1d4ed8;
-  --hover-green: #059669;
+  --hover-blue: #020617; /* Black/Navy */
+  --hover-green: #0284c7; /* Darker Teal */
 
   color: var(--text-dark);
   background-color: var(--background-white);
