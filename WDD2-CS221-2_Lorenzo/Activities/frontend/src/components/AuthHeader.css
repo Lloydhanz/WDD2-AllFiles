@@ -3,11 +3,10 @@
   top: 0;
   left: 0;
   width: 100%;
-  padding: 0.75rem 0;
-  background-color: rgba(255, 255, 255, 0.05);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 0.35rem 0; /* thinner header */
+  background-color: var(--background-white);
+  border-bottom: 2.5px solid var(--primary-blue); /* more visible border */
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
   z-index: 1000;
 }
 
@@ -15,6 +14,7 @@
   max-width: 1300px;
   margin: 0 auto;
   padding: 0 2rem;
+  min-height: 48px;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -22,7 +22,7 @@
 
 .auth-logo h2 {
   margin: 0;
-  color: #ffffff;
+  color: var(--primary-blue);
   font-size: 1.5rem;
   font-weight: 700;
 }
@@ -31,19 +31,19 @@
   display: flex;
   align-items: center;
   gap: 0.75rem;
-  color: #ffffff;
+  color: var(--primary-blue);
   text-decoration: none;
   font-weight: 500;
   font-size: 1rem;
   transition: all 0.2s ease;
   padding: 0.5rem 1rem;
   border-radius: 8px;
-  background-color: rgba(255, 255, 255, 0.1);
+  background-color: var(--border-gray);
 }
 
 .back-link:hover {
-  color: #ffffff;
-  background-color: rgba(255, 255, 255, 0.2);
+  color: var(--background-white);
+  background-color: var(--primary-blue);
   text-decoration: none;
 }
 

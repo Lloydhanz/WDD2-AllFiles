@@ -103,7 +103,9 @@
   font-weight: bold;
   color: var(--primary-blue);
   border: 1.5px solid var(--primary-blue);
-  transition: background 0.2s, color 0.2s;
+  transition:
+    background 0.2s,
+    color 0.2s;
 }
 
 .quantity-controls button:hover {
