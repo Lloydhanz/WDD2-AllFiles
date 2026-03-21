@@ -17,11 +17,14 @@ export default function AboutUs() {
           <div className="about-card">
             <h2>Our Mission</h2>
             <p>
-              At Inventory Manager, we believe that managing your stock
-              shouldn't be a headache. Our mission is to provide businesses of
-              all sizes with a simple, powerful, and intuitive platform to track
-              products, manage sales, and grow their operations without the
-              technical overwhelm.
+              At Retail Hub, we’re redefining how businesses manage and grow in
+              the retail space. Our mission is to provide an all-in-one platform
+              that simplifies inventory, sales, and customer management—making
+              everyday operations faster, smarter, and more efficient. We aim to
+              remove the complexity of retail processes, empowering
+              entrepreneurs and businesses to focus on what truly matters:
+              delivering great products, enhancing customer experiences, and
+              scaling with confidence.
             </p>
           </div>
           <div className="about-card">

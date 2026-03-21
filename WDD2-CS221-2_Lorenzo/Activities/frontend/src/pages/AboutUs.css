@@ -14,11 +14,12 @@
 .about-hero {
   text-align: center;
   margin-bottom: 4rem;
+  color: aliceblue;
 }
 
 .about-hero h1 {
   font-size: 3rem;
-  color: var(--primary-blue);
+  color: aliceblue;
   margin-bottom: 1rem;
 }
 

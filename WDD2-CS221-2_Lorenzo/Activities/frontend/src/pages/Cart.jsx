@@ -6,6 +6,7 @@ import { useCart } from "../contexts/CartContext";
 import { useAuth } from "../contexts/AuthContext";
 import { Link, useNavigate } from "react-router-dom";
 import "./Cart.css";
+import { createOrder } from "../services/orderService";
 
 export default function Cart() {
   const { cart, removeFromCart, updateQuantity, cartTotal, clearCart } =
@@ -24,29 +25,21 @@ export default function Cart() {
     );
   }
 
-  const handleCheckout = () => {
+  const handleCheckout = async () => {
     if (cart.length === 0) return;
 
-    // 1. Create the Order Object
-    const newOrder = {
-      id: `ORD-${Date.now()}`,
-      date: new Date().toLocaleString(),
-      items: cart,
-      total: cartTotal,
-      status: "Paid",
-    };
+    try {
+      await createOrder({
+        items: cart,
+        total: cartTotal,
+      });
 
-    // 2. Save it to local storage history specific to the user
-    const historyKey = `orderHistory_${user.username}`;
-    const existingHistory = JSON.parse(localStorage.getItem(historyKey)) || [];
-    localStorage.setItem(
-      historyKey,
-      JSON.stringify([newOrder, ...existingHistory]),
-    );
-
-    alert("Checkout successful! Your payment has been processed.");
-    clearCart();
-    navigate("/history");
+      alert("Order placed successfully!");
+      clearCart();
+      navigate("/history");
+    } catch (error) {
+      alert("Error placing order: " + error.message);
+    }
   };
 
   return (

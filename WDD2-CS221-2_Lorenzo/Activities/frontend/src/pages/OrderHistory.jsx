@@ -5,6 +5,7 @@ import Card from "../components/Card";
 import { useAuth } from "../contexts/AuthContext";
 import { Link } from "react-router-dom";
 import Button from "../components/button";
+import { getUserOrders } from "../services/orderService";
 
 export default function OrderHistory() {
   const { user } = useAuth();
@@ -12,9 +13,9 @@ export default function OrderHistory() {
 
   useEffect(() => {
     if (user) {
-      const historyKey = `orderHistory_${user.username}`;
-      const savedOrders = JSON.parse(localStorage.getItem(historyKey)) || [];
-      setOrders(savedOrders);
+      getUserOrders()
+        .then((data) => setOrders(data))
+        .catch((err) => console.error("Failed to load orders:", err));
     }
   }, [user]);
 
@@ -45,22 +46,16 @@ export default function OrderHistory() {
           width: "100%",
         }}
       >
-        <h1
-          style={{
-            marginBottom: "2rem",
-            color: "var(--text-dark)",
-            textAlign: "center",
-          }}
-        >
-          Purchase History
-        </h1>
+        <h2 style={{ marginBottom: "2rem" }}>Your Order History</h2>
 
         {orders.length === 0 ? (
           <Card>
             <div style={{ textAlign: "center", padding: "2rem" }}>
-              <h3>You have no past purchases.</h3>
+              <p style={{ color: "var(--text-light)", marginBottom: "1.5rem" }}>
+                You haven't placed any orders yet.
+              </p>
               <Link to="/shop">
-                <Button style={{ marginTop: "1rem" }}>Start Shopping</Button>
+                <Button variant="primary">Start Shopping</Button>
               </Link>
             </div>
           </Card>
@@ -69,18 +64,26 @@ export default function OrderHistory() {
             style={{ display: "flex", flexDirection: "column", gap: "1.5rem" }}
           >
             {orders.map((order) => (
-              <Card key={order.id} title={`Order: ${order.id}`}>
+              <Card key={order._id}>
+                {" "}
                 <div
                   style={{
-                    borderBottom: "1px solid #eee",
+                    borderBottom: "1px solid var(--border-gray)",
                     paddingBottom: "1rem",
                     marginBottom: "1rem",
                   }}
                 >
-                  <p style={{ margin: "0.25rem 0" }}>
-                    <strong>Date:</strong> {order.date}
+                  <h3 style={{ margin: 0 }}>
+                    Order #{order._id.substring(0, 8).toUpperCase()}
+                  </h3>
+
+                  <p
+                    style={{ margin: "0.25rem 0", color: "var(--text-light)" }}
+                  >
+                    {new Date(order.createdAt).toLocaleString()}
                   </p>
-                  <p style={{ margin: "0.25rem 0" }}>
+
+                  <p style={{ margin: "0.5rem 0 0.25rem 0" }}>
                     <strong>Status:</strong>{" "}
                     <span
                       style={{
@@ -95,7 +98,6 @@ export default function OrderHistory() {
                     <strong>Total Paid:</strong> ${order.total.toFixed(2)}
                   </p>
                 </div>
-
                 <h4 style={{ marginBottom: "0.5rem" }}>Items:</h4>
                 <ul style={{ listStyle: "none", padding: 0, margin: 0 }}>
                   {order.items.map((item, index) => (

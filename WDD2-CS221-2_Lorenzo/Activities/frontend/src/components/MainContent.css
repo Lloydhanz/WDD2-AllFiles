@@ -11,10 +11,13 @@
 
 .intro-section h2 {
   font-size: 2.5rem;
-  color: #333;
+  color: #ffffff;
 }
 
-/* Responsive Grid */
+.intro-section p {
+  color: #ffffff;
+}
+
 .features-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));

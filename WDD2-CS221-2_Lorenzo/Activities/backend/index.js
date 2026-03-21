@@ -4,6 +4,7 @@ import cors from "cors";
 import connectDB from "./config/db.js";
 import authRoutes from "./routes/authRoutes.js";
 import inventoryRoutes from "./routes/inventoryRoutes.js";
+import orderRoutes from "./routes/orderRoutes.js";
 
 const app = express();
 const PORT = 3000;
@@ -17,6 +18,7 @@ app.use(
 );
 app.use("/api/auth", authRoutes);
 app.use("/api/inventory", inventoryRoutes);
+app.use("/api/orders", orderRoutes);
 
 //https://localhost:3000/api/auth/register
 //https://localhost:3000/api/auth/login
