@@ -17,6 +17,7 @@ app.use(
 );
 app.use("/api/auth", authRoutes);
 app.use("/api/inventory", inventoryRoutes);
+
 //https://localhost:3000/api/auth/register
 //https://localhost:3000/api/auth/login
 //https://localhost:3000/api/auth/logout

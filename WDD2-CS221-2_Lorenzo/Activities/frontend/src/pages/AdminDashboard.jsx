@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { useAuth } from "../contexts/AuthContext";
 import {
   useNavigate,
@@ -8,59 +8,35 @@ import {
   useLocation,
 } from "react-router-dom";
 import Header from "../components/Header";
-import Inventory from "./Inventory"; // Re-using your create form here
-import "./AdminDashboard.css";
+import Inventory from "./Inventory"; // Your existing "Add Product" form
 
-// Placeholder components for the admin tabs
-const AdminStats = () => (
-  <div className="admin-content">
-    <h2>Dashboard Stats</h2>
-    <p>Overview of sales and active users will go here.</p>
-  </div>
-);
-const AdminAdd = () => (
-  <div className="admin-content">
-    <Inventory />
-  </div>
-);
-const AdminEdit = () => (
-  <div className="admin-content">
-    <h2>Edit Product</h2>
-    <p>Product edit table goes here.</p>
-  </div>
-);
-const AdminDelete = () => (
-  <div className="admin-content">
-    <h2>Delete Product</h2>
-    <p>Product deletion controls go here.</p>
-  </div>
-);
-const AdminList = () => (
-  <div className="admin-content">
-    <h2>Inventory List</h2>
-    <p>Full grid of all products goes here.</p>
-  </div>
-);
+// Import the 4 new components we just made
+import AdminStats from "./AdminStats";
+import AdminList from "./AdminList";
+import AdminEdit from "./AdminEdit";
+import AdminDelete from "./AdminDelete";
+
+import "./AdminDashboard.css";
 
 export default function AdminDashboard() {
   const { user } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
 
-  useEffect(() => {
-    // Redirect if not logged in. Later, add role check: if (user?.role !== 'Admin') navigate("/");
-    if (!user) {
-      navigate("/login");
+  React.useEffect(() => {
+    if (!user || (user.role !== "Admin" && user.role !== "Moderator")) {
+      navigate("/");
     }
   }, [user, navigate]);
 
-  if (!user) return null;
+  if (!user || (user.role !== "Admin" && user.role !== "Moderator")) {
+    return null;
+  }
 
   return (
     <div className="admin-page">
       <Header />
 
-      {/* Admin Sub-Navbar */}
       <div className="admin-navbar">
         <div className="admin-nav-container">
           <Link
@@ -96,11 +72,17 @@ export default function AdminDashboard() {
         </div>
       </div>
 
-      {/* Admin Content Area */}
       <div className="admin-main-content">
         <Routes>
           <Route path="/" element={<AdminStats />} />
-          <Route path="/add" element={<AdminAdd />} />
+          <Route
+            path="/add"
+            element={
+              <div className="admin-content">
+                <Inventory />
+              </div>
+            }
+          />
           <Route path="/edit" element={<AdminEdit />} />
           <Route path="/delete" element={<AdminDelete />} />
           <Route path="/list" element={<AdminList />} />

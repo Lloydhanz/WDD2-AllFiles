@@ -5,7 +5,7 @@ import Shop from "./pages/Shop";
 import AboutUs from "./pages/AboutUs";
 import Profile from "./pages/Profile";
 import Cart from "./pages/Cart";
-import OrderHistory from "./pages/OrderHistory"; // IMPORT NEW PAGE
+import OrderHistory from "./pages/OrderHistory";
 import "./App.css";
 import { AuthProvider } from "./contexts/AuthContext";
 import { CartProvider } from "./contexts/CartContext";

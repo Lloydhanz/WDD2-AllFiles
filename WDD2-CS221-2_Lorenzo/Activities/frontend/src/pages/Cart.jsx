@@ -44,7 +44,6 @@ export default function Cart() {
       JSON.stringify([newOrder, ...existingHistory]),
     );
 
-    // 3. Clear cart and redirect
     alert("Checkout successful! Your payment has been processed.");
     clearCart();
     navigate("/history");

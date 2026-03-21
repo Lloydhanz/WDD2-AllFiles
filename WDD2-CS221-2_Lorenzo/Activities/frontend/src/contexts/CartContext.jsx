@@ -6,23 +6,32 @@ const CartContext = createContext(null);
 export const CartProvider = ({ children }) => {
   const { user } = useAuth();
 
-  // Load initial cart from local storage with a SAFETY NET
+  // ✅ SAFE INITIAL LOAD
   const [cart, setCart] = useState(() => {
     try {
       const savedCart = localStorage.getItem("cart");
-      return savedCart ? JSON.parse(savedCart) : [];
+
+      if (!savedCart) return [];
+
+      const parsed = JSON.parse(savedCart);
+
+      // 🔥 Ensure it's always an array
+      return Array.isArray(parsed) ? parsed : [];
     } catch (error) {
       console.error("Failed to load cart from storage:", error);
-      return []; // Return empty cart if parsing fails
+      return [];
     }
   });
 
-  // Save cart to local storage whenever it changes
+  // ✅ ALWAYS SAVE SAFE DATA
   useEffect(() => {
-    localStorage.setItem("cart", JSON.stringify(cart));
+    if (Array.isArray(cart)) {
+      localStorage.setItem("cart", JSON.stringify(cart));
+    } else {
+      localStorage.setItem("cart", JSON.stringify([]));
+    }
   }, [cart]);
 
-  // Clear the cart if the user logs out
   useEffect(() => {
     if (!user) {
       setCart([]);
@@ -31,43 +40,59 @@ export const CartProvider = ({ children }) => {
 
   const addToCart = (product) => {
     setCart((prevCart) => {
-      const existingItem = prevCart.find((item) => item._id === product._id);
+      const safePrev = Array.isArray(prevCart) ? prevCart : [];
+
+      const existingItem = safePrev.find((item) => item._id === product._id);
+
       if (existingItem) {
-        return prevCart.map((item) =>
+        return safePrev.map((item) =>
           item._id === product._id
             ? { ...item, quantity: item.quantity + 1 }
             : item,
         );
       }
-      return [...prevCart, { ...product, quantity: 1 }];
+
+      return [...safePrev, { ...product, quantity: 1 }];
     });
   };
 
   const removeFromCart = (productId) => {
-    setCart((prevCart) => prevCart.filter((item) => item._id !== productId));
+    setCart((prevCart) => {
+      const safePrev = Array.isArray(prevCart) ? prevCart : [];
+      return safePrev.filter((item) => item._id !== productId);
+    });
   };
 
   const updateQuantity = (productId, quantity) => {
     if (quantity < 1) return;
-    setCart((prevCart) =>
-      prevCart.map((item) =>
+
+    setCart((prevCart) => {
+      const safePrev = Array.isArray(prevCart) ? prevCart : [];
+
+      return safePrev.map((item) =>
         item._id === productId ? { ...item, quantity } : item,
-      ),
-    );
+      );
+    });
   };
 
   const clearCart = () => setCart([]);
 
-  const cartTotal = cart.reduce(
-    (total, item) => total + item.price * item.quantity,
+  const safeCart = Array.isArray(cart) ? cart : [];
+
+  const cartTotal = safeCart.reduce(
+    (total, item) => total + (item.price || 0) * (item.quantity || 0),
     0,
   );
-  const cartCount = cart.reduce((count, item) => count + item.quantity, 0);
+
+  const cartCount = safeCart.reduce(
+    (count, item) => count + (item.quantity || 0),
+    0,
+  );
 
   return (
     <CartContext.Provider
       value={{
-        cart,
+        cart: safeCart,
         addToCart,
         removeFromCart,
         updateQuantity,
