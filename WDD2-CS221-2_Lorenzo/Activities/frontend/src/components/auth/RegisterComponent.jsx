@@ -1,121 +1,106 @@
-import { useState } from "react";
-import Card from "../../components/Card";
-import Button from "../../components/button";
-import { useAuth } from "../../contexts/AuthContext";
-import "./RegisterComponent.css";
-import { useNavigate } from "react-router-dom";
+import React, { useState } from "react";
+import Input from "../Input";
+import Button from "../button";
+import { authService } from "../../services/authService";
 
-const RegisterComponent = ({ noCard = false }) => {
-  const { register } = useAuth();
-  const navigate = useNavigate();
-  const [form, setForm] = useState({
+const RegisterComponent = ({ noCard }) => {
+  const [formData, setFormData] = useState({
+    fullName: "",
     username: "",
-    name: "",
     email: "",
     password: "",
-    confirm: "",
   });
-  const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const handleChange = (e) => {
-    const { name, value } = e.target;
-    setForm((p) => ({ ...p, [name]: value }));
+    setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
-    if (form.password !== form.confirm) {
-      setError("Passwords do not match");
-      return;
-    }
+    setSuccess("");
     setLoading(true);
+
     try {
-      await register({
-        username: form.username,
-        name: form.name,
-        email: form.email,
-        password: form.password,
-      });
-      // After successful registration, show a success message and redirect to login
-      alert("Sign up successful. Please login.");
-      navigate("/login", { replace: true });
+      await authService.register(formData);
+      setSuccess("Registration successful! You can now log in.");
+
+      setFormData({ fullName: "", username: "", email: "", password: "" });
     } catch (err) {
-      setError(err?.message || "Registration failed");
+      setError(err.message || "Failed to register");
     } finally {
       setLoading(false);
     }
   };
 
-  const content = (
-    <>
-      {error && <div className="auth-error">{error}</div>}
-      <div className="form-title">SIGN UP</div>
-      <form className="auth-form" onSubmit={handleSubmit}>
-        <div className="form-field">
-          <label>Username</label>
-          <input
-            name="username"
-            value={form.username}
-            onChange={handleChange}
-            placeholder="Choose a username"
-            required
-          />
+  const formContent = (
+    <form onSubmit={handleSubmit} className="login-form">
+      {error && <div className="alert-error">{error}</div>}
+      {success && (
+        <div
+          style={{
+            color: "green",
+            marginBottom: "1rem",
+            padding: "0.5rem",
+            backgroundColor: "#e6fffa",
+            borderRadius: "6px",
+          }}
+        >
+          {success}
         </div>
-        <div className="form-field">
-          <label>Name</label>
-          <input
-            name="name"
-            value={form.name}
-            onChange={handleChange}
-            placeholder="Full name"
-            required
-          />
-        </div>
-        <div className="form-field">
-          <label>Email</label>
-          <input
-            name="email"
-            type="email"
-            value={form.email}
-            onChange={handleChange}
-            placeholder="name@example.com"
-            required
-          />
-        </div>
-        <div className="form-field">
-          <label>Password</label>
-          <input
-            name="password"
-            type="password"
-            value={form.password}
-            onChange={handleChange}
-            placeholder="Create a password (min 8 characters)"
-            required
-          />
-        </div>
-        <div className="form-field">
-          <label>Confirm</label>
-          <input
-            name="confirm"
-            type="password"
-            value={form.confirm}
-            onChange={handleChange}
-            placeholder="Confirm your password"
-            required
-          />
-        </div>
-        <Button type="submit" loading={loading}>
-          Register
-        </Button>
-      </form>
-    </>
+      )}
+
+      <Input
+        label="Full Name"
+        type="text"
+        name="fullName"
+        value={formData.fullName}
+        onChange={handleChange}
+        placeholder="Enter your full name"
+        required
+      />
+
+      <Input
+        label="Username"
+        type="text"
+        name="username"
+        value={formData.username}
+        onChange={handleChange}
+        placeholder="Enter your username"
+        required
+      />
+      <Input
+        label="Email"
+        type="email"
+        name="email"
+        value={formData.email}
+        onChange={handleChange}
+        placeholder="Enter your email"
+        required
+      />
+      <Input
+        label="Password"
+        type="password"
+        name="password"
+        value={formData.password}
+        onChange={handleChange}
+        placeholder="Create a password"
+        required
+      />
+      <Button type="submit" loading={loading} style={{ marginTop: "1rem" }}>
+        Register
+      </Button>
+    </form>
   );
 
-  if (noCard) return content;
-
-  return <Card title="Create Account">{content}</Card>;
+  return noCard ? (
+    formContent
+  ) : (
+    <div className="auth-card-wrapper">{formContent}</div>
+  );
 };
 
 export default RegisterComponent;

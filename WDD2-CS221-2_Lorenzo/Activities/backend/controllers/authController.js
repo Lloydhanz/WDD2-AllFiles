@@ -4,11 +4,12 @@ import bcrypt from "bcryptjs";
 
 export const register = async (req, res) => {
   try {
-    const { username, email, password } = req.body;
+    const { fullName, username, email, password } = req.body;
     const userExists = await User.findOne({ email });
     if (userExists)
       return res.status(400).json({ message: "User Already Exists." });
-    const user = await User.create({ username, email, password });
+
+    const user = await User.create({ fullName, username, email, password });
     res.status(201).json({ message: "User Register Successfully" });
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -41,6 +42,7 @@ export const login = async (req, res) => {
 
     res.status(200).json({
       _id: user.id,
+      fullName: user.fullName,
       username: user.username,
       email: user.email,
       role: user.role,
@@ -59,6 +61,7 @@ export const updateProfile = async (req, res) => {
   try {
     const user = await User.findById(req.user._id);
     if (user) {
+      user.fullName = req.body.fullName || user.fullName;
       user.username = req.body.username || user.username;
       user.email = req.body.email || user.email;
       if (req.body.password) {
@@ -67,6 +70,7 @@ export const updateProfile = async (req, res) => {
       const updatedUser = await user.save();
       res.json({
         id: updatedUser._id,
+        fullName: updatedUser.fullName,
         username: updatedUser.username,
         email: updatedUser.email,
         role: updatedUser.role,
@@ -81,8 +85,12 @@ export const updateProfile = async (req, res) => {
 
 export const deleteProfile = async (req, res) => {
   try {
-    await User.findByIdAndDelete(req.user._id);
-    res.json({ message: "User deleted successfully" });
+    const user = await User.findByIdAndDelete(req.user._id);
+    if (user) {
+      res.status(200).json({ message: "User deleted successfully" });
+    } else {
+      res.status(404).json({ message: "User not found" });
+    }
   } catch (error) {
     res.status(500).json({ message: error.message });
   }

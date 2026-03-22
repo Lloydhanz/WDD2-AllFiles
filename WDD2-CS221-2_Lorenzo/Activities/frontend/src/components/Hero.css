@@ -1,5 +1,5 @@
 .hero-container {
-  height: 80vh; /* Covers 80% of the viewport height */
+  height: 80vh;
   display: flex;
   align-items: center;
   justify-content: center;

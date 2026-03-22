@@ -16,7 +16,6 @@ export async function createProduct(product) {
   return data;
 }
 
-// READ ALL
 export async function getAllProducts() {
   const response = await fetch(`${API_BASE}/`);
   const data = await response.json();
@@ -25,7 +24,6 @@ export async function getAllProducts() {
   return data;
 }
 
-// UPDATE
 export async function updateProduct(id, productData) {
   const token = localStorage.getItem("token");
   const response = await fetch(`${API_BASE}/update/${id}`, {
@@ -42,7 +40,6 @@ export async function updateProduct(id, productData) {
   return data;
 }
 
-// DELETE
 export async function deleteProduct(id) {
   const token = localStorage.getItem("token");
   const response = await fetch(`${API_BASE}/delete/${id}`, {

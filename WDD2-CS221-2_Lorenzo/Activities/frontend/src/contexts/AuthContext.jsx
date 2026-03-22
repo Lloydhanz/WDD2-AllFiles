@@ -18,12 +18,13 @@ export const AuthProvider = ({ children }) => {
   const login = async (credentials) => {
     const data = await authService.login(credentials);
 
-    // FIX: Capture the role from the backend
     const userObj = data.user
       ? data.user
       : data.username || data._id
         ? {
             id: data._id || null,
+            fullName: data.fullName || "",
+            email: data.email || "",
             username: data.username || null,
             role: data.role || "User",
           }
@@ -34,7 +35,6 @@ export const AuthProvider = ({ children }) => {
 
     setUser(userObj);
 
-    // FIX: Return the user object so the login form can read it
     return userObj;
   };
 

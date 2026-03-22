@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 import Card from "../components/Card";
@@ -12,12 +12,26 @@ export default function Profile() {
   const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
-    username: user?.username || "",
-    email: user?.email || "",
+    fullName: "",
+    username: "",
+    email: "",
     password: "",
   });
+
   const [message, setMessage] = useState("");
   const [isError, setIsError] = useState(false);
+
+  // NEW: This guarantees the form loads your saved data immediately
+  useEffect(() => {
+    if (user) {
+      setFormData({
+        fullName: user.fullName || "",
+        username: user.username || "",
+        email: user.email || "",
+        password: "",
+      });
+    }
+  }, [user]);
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -36,107 +50,122 @@ export default function Profile() {
         body: JSON.stringify(formData),
       });
       const data = await response.json();
+
       if (response.ok) {
         setIsError(false);
         setMessage("Profile updated successfully!");
-        localStorage.setItem("user", JSON.stringify(data));
+
+        const updatedUser = { ...user, ...data };
+        localStorage.setItem("user", JSON.stringify(updatedUser));
+
+        setTimeout(() => window.location.reload(), 800);
       } else {
         setIsError(true);
         setMessage(data.message || "Failed to update profile.");
       }
     } catch (error) {
       setIsError(true);
-      setMessage("Error updating profile.");
+      setMessage("An error occurred. Please try again.");
     }
   };
 
   const handleDelete = async () => {
     const confirmDelete = window.confirm(
-      "Are you absolutely sure you want to delete your account? This cannot be undone.",
+      "Are you sure you want to delete your account? This action cannot be undone.",
     );
+    if (!confirmDelete) return;
 
-    if (confirmDelete) {
-      const token = localStorage.getItem("token");
-      try {
-        const response = await fetch("http://localhost:3000/api/auth/profile", {
-          method: "DELETE",
-          headers: { Authorization: `Bearer ${token}` },
-        });
-        if (response.ok) {
-          await logout();
-          navigate("/");
-        } else {
-          setIsError(true);
-          setMessage("Failed to delete account.");
-        }
-      } catch (error) {
-        setIsError(true);
-        setMessage("Error deleting account.");
+    const token = localStorage.getItem("token");
+    try {
+      const response = await fetch("http://localhost:3000/api/auth/profile", {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      if (response.ok) {
+        alert("Account deleted successfully.");
+        logout();
+        navigate("/");
+      } else {
+        const data = await response.json();
+        alert(data.message || "Failed to delete account.");
       }
+    } catch (error) {
+      alert("An error occurred. Please try again.");
     }
   };
 
-  if (!user) {
-    return (
-      <div style={{ textAlign: "center", padding: "5rem" }}>
-        <h2>Please log in to view this page.</h2>
-      </div>
-    );
-  }
-
   return (
     <div
-      style={{ display: "flex", flexDirection: "column", minHeight: "100vh" }}
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        minHeight: "100vh",
+        backgroundColor: "#f9fafb",
+      }}
     >
       <Header />
       <main
         style={{
           flex: 1,
+          maxWidth: "800px",
+          margin: "0 auto",
           padding: "3rem 1rem",
-          display: "flex",
-          justifyContent: "center",
+          width: "100%",
         }}
       >
-        <div style={{ width: "100%", maxWidth: "500px" }}>
-          <Card title="Account Settings">
+        <div style={{ display: "flex", justifyContent: "center" }}>
+          <Card title="Your Profile">
             {message && (
               <div
                 style={{
-                  padding: "1rem",
-                  marginBottom: "1rem",
-                  borderRadius: "8px",
+                  padding: "0.75rem",
+                  marginBottom: "1.5rem",
+                  borderRadius: "6px",
                   backgroundColor: isError ? "#fee" : "#e6fffa",
-                  color: isError
-                    ? "var(--error-red)"
-                    : "var(--secondary-green)",
-                  border: `1px solid ${isError ? "var(--error-red)" : "var(--secondary-green)"}`,
+                  color: isError ? "var(--error-red)" : "#234e52",
+                  border: `1px solid ${isError ? "var(--error-red)" : "#81e6d9"}`,
                 }}
               >
                 {message}
               </div>
             )}
+            <form onSubmit={handleUpdate} className="login-form">
+              <Input
+                label="Full Name"
+                type="text"
+                name="fullName"
+                value={formData.fullName}
+                onChange={handleChange}
+                placeholder="E.g., John Doe"
+              />
 
-            <form onSubmit={handleUpdate}>
               <Input
                 label="Username"
+                type="text"
                 name="username"
                 value={formData.username}
                 onChange={handleChange}
+                required
               />
+
               <Input
                 label="Email"
+                type="email"
                 name="email"
                 value={formData.email}
                 onChange={handleChange}
+                required
               />
               <Input
                 label="New Password (leave blank to keep current)"
-                name="password"
                 type="password"
+                name="password"
                 value={formData.password}
                 onChange={handleChange}
               />
-
               <Button
                 type="submit"
                 variant="primary"
