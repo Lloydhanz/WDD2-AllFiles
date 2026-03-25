@@ -2,10 +2,11 @@
 
 
 📖 Overview
-
 Retail Hub is a web-based platform designed to simplify and streamline retail operations while providing a smooth shopping experience for users. It allows customers to browse products, manage their cart, and place orders, while ensuring secure access through user authentication.
 
+
 To access the full features of the platform, users must first create an account and log in.
+
 
 🚀 Features
 🔐 User Authentication (Register & Login required)
